@@ -31,8 +31,8 @@ class Evaluation(object):
         print('------pmd start-------')
         # pmd
         output_lines = []
-        cmd = './analyzer/pmd-bin-6.51.0/bin/run.sh pmd -d ' + dir_for_marking + \
-              ' -R rulesets/java/basic.xml,rulesets/java/design.xml,rulesets/java/braces.xml,rulesets/java/' \
+        cmd = 'C:/Users/pauld/PycharmProjects/DeepCRMFYP/analyzer/pmd-bin-6.51.0/bin/run.sh pmd -d ' + dir_for_marking \
+              + ' -R rulesets/java/basic.xml,rulesets/java/design.xml,rulesets/java/braces.xml,rulesets/java/' \
               'comments.xml,rulesets/java/codesize.xml,rulesets/java/controversial.xml,rulesets/java/naming.xml -f text'
         output_lines.extend(os.popen(cmd).readlines())
         for line in output_lines[1:]:
@@ -51,9 +51,13 @@ class Evaluation(object):
         output_lines = []
         output_lines.extend(
             os.popen(
-                'java -jar ./analyzer/checkstyle-8.2-all.jar -c /google_checks.xml ' + dir_for_marking).readlines())
+                'java -jar C:/Users/pauld/PycharmProjects'
+                '/DeepCRMFYP/analyzer/checkstyle-8.2-all.jar -c /google_checks.xml ' + dir_for_marking).readlines())
         output_lines.extend(
-            os.popen('java -jar ./analyzer/checkstyle-8.2-all.jar -c /sun_checks.xml ' + dir_for_marking).readlines())
+            os.popen(
+                'java -jar C:/Users/pauld/PycharmProjects/'
+                'DeepCRMFYP/analyzer/checkstyle-8.2-all.jar -c /sun_checks.xml '
+                + dir_for_marking).readlines())
         for line in output_lines:
             if line.startswith('['):
                 file_path_in_result = line[line.find('] ') + 2:line.find(':')]
