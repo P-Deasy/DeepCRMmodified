@@ -31,13 +31,13 @@ class Evaluation(object):
         print('------pmd start-------')
         # pmd
         output_lines = []
-        cmd = './analyzer/pmd-bin-5.8.1/bin/run.sh pmd -d ' + dir_for_marking + \
+        cmd = './analyzer/pmd-bin-6.51.0/bin/run.sh pmd -d ' + dir_for_marking + \
               ' -R rulesets/java/basic.xml,rulesets/java/design.xml,rulesets/java/braces.xml,rulesets/java/' \
               'comments.xml,rulesets/java/codesize.xml,rulesets/java/controversial.xml,rulesets/java/naming.xml -f text'
         output_lines.extend(os.popen(cmd).readlines())
         for line in output_lines[1:]:
             if line.find('Error while parsing') != -1:
-                print('ERROR while running PMD')
+                print('ERROR while running analyzer')
                 print(line)
                 continue
             file_path_in_result = line[:line.find(':')]
