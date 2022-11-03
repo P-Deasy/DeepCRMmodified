@@ -6,9 +6,9 @@ import sys
 if __name__ == '__main__':
 
     args = sys.argv[1:]
-    input_dir = ''
-    analyzer = ''
-    output_dir_prefix = ''
+    input_dir = 'C:/Users/pauld/PycharmProjects/DeepCRMFYP/Code Snippet Repository/Hibernate'
+    analyzer = 'C:/Users/pauld/PycharmProjects/DeepCRMFYP/analyzer'
+    output_dir_prefix = 'results'
 
     try:
         (opts, filenames) = getopt.getopt(args, '', ['input-dir=',
