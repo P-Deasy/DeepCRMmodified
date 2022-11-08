@@ -52,11 +52,11 @@ class Evaluation(object):
         output_lines.extend(
             os.popen(
                 'java -jar C:/Users/pauld/PycharmProjects'
-                '/DeepCRMFYP/analyzer/checkstyle-8.2-all.jar -c /google_checks.xml ' + dir_for_marking).readlines())
+                '/DeepCRMFYP/analyzer/checkstyle-10.4-all.jar -c /google_checks.xml ' + dir_for_marking).readlines())
         output_lines.extend(
             os.popen(
                 'java -jar C:/Users/pauld/PycharmProjects/'
-                'DeepCRMFYP/analyzer/checkstyle-8.2-all.jar -c /sun_checks.xml '
+                'DeepCRMFYP/analyzer/checkstyle-10.4-all.jar -c /sun_checks.xml '
                 + dir_for_marking).readlines())
         for line in output_lines:
             if line.startswith('['):
