@@ -9,6 +9,17 @@ class Evaluation(object):
         self.analyzer = analyzer
 
     @staticmethod
+    def find_second_instance(input_string):
+        i = 0
+        colon_tracker = ""
+        while i < len(input_string):
+            if input_string[i] == ":":
+                if colon_tracker == ":":
+                    return i
+                colon_tracker = ":"
+            i += 1
+
+    @staticmethod
     def create_file_with_class(file_path, file_path_with_class):
         file = open(file_path)
         tmp_file = open(file_path_with_class, 'w')
@@ -20,6 +31,9 @@ class Evaluation(object):
         marking_file_dict = {}
 
         dir_for_marking = 'dir_for_marking'
+
+        if os.path.exists("C:/Users/pauld/PycharmProjects/DeepCRMFYP/Source Code/dir_for_marking"):
+            os.remove(dir_for_marking)
 
         create_new_dir(dir_for_marking)
 
@@ -60,7 +74,7 @@ class Evaluation(object):
                 + dir_for_marking).readlines())
         for line in output_lines:
             if line.startswith('['):
-                file_path_in_result = line[line.find('] ') + 2:line.find(':')]
+                file_path_in_result = line[line.find('] ') + 2:self.find_second_instance(line)]
                 file_path_in_result = marking_file_dict[os.path.basename(file_path_in_result)]
                 if file_path_in_result not in file_result_dict:
                     print('ERROR------------%s does not have pmd marking' % file_path_in_result)
