@@ -1,4 +1,5 @@
 import os
+import subprocess
 from util.util import create_new_dir, walk_files
 from util.distincy import distincy
 
@@ -45,20 +46,31 @@ class Evaluation(object):
         print('------pmd start-------')
         # pmd
         output_lines = []
-        cmd = 'C:/Users/pauld/PycharmProjects/DeepCRMFYP/analyzer/pmd-bin-6.51.0/bin/run.sh pmd -d ' + dir_for_marking \
-              + ' -R rulesets/java/basic.xml,rulesets/java/design.xml,rulesets/java/braces.xml,rulesets/java/' \
-              'comments.xml,rulesets/java/codesize.xml,rulesets/java/controversial.xml,rulesets/java/naming.xml -f text'
-        output_lines.extend(os.popen(cmd).readlines())
+        cmd = r'C:\Users\pauld\PycharmProjects\DeepCRMFYP\analyzer\pmd-bin-6.51.0\bin\run.sh pmd -d ' \
+              + dir_for_marking + r' -R rulesets\java\basic.xml,rulesets\java\design.xml,rulesets\java' \
+                                  r'\braces.xml,rulesets\java\comments.xml,rulesets\java\codesize.xml,rulesets\java' \
+                                  r'\controversial.xml,rulesets\java\naming.xml -f text'
+        output = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+        #print(output)
+        #print(output.stdout)
+        #print(subprocess.check_output(cmd, shell=True))
+        output_lines.extend(output.stdout.readlines())
+        print("******************")
+        print(output_lines)
+        print("******************")
         for line in output_lines[1:]:
             if line.find('Error while parsing') != -1:
                 print('ERROR while running analyzer')
                 print(line)
                 continue
-            file_path_in_result = line[:line.find(':')]
+            file_path_in_result = line[:self.find_second_instance(line)]
             file_path_in_result = marking_file_dict[os.path.basename(file_path_in_result)]
             if file_path_in_result not in file_result_dict:
                 file_result_dict[file_path_in_result] = 0
             file_result_dict[file_path_in_result] = file_result_dict[file_path_in_result] + 1
+            print("----------------------")
+            print(file_result_dict.keys())
+            print("----------------------")
 
         print('------checkstyle start-------')
         # checkstyle
