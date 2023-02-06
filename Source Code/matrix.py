@@ -5,11 +5,12 @@ import re
 import os
 import errno
 
-_input_dir = "C:\\Users\\pauld\\Downloads\\FYPData-main\\FYPData-main\\results_readable\\results_readable"
+#_input_dir = "C:\\Users\\pauld\\Downloads\\FYPData-main\\FYPData-main\\results_readable\\results_readable"
 #_input_dir = "C:\\Users\\pauld\\IdeaProjects\\Workplace_Tech\\demo\\src\\main\\java\\com\\example\\demo"
-_character = False
-_node = True
-_token = False
+_input_dir = "C:\\Users\\pauld\\Downloads\\FYPData-main\\FYPData-main"
+_character = True
+_node = False
+_token = True
 _char_dict = []
 
 
