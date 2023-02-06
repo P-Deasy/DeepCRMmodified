@@ -5,10 +5,11 @@ import re
 import os
 import errno
 
-_input_dir = None
-_character = None
-_node = None
-_token = None
+_input_dir = "C:\\Users\\pauld\\Downloads\\FYPData-main\\FYPData-main\\results_readable\\results_readable"
+#_input_dir = "C:\\Users\\pauld\\IdeaProjects\\Workplace_Tech\\demo\\src\\main\\java\\com\\example\\demo"
+_character = False
+_node = True
+_token = False
 _char_dict = []
 
 
@@ -115,6 +116,171 @@ def xml_ascii(content):
     return result
 
 
+def transfer_node_level_v2(files):
+    print('ToMatrix %d files' % len(files))
+
+    max_line_width = 0
+    max_line_count = 0
+
+    for file_path in files:
+        if not file_path.endswith('.java'):
+            continue
+
+        input_file_object = open(file_path, 'r')
+
+        lines = input_file_object.readlines()
+        if len(lines) > max_line_count:
+            max_line_count = len(lines)
+
+        for line in lines:
+            if len(line) > max_line_width:
+                max_line_width = len(line)
+                print('%s max line %d' % (file_path, max_line_width))
+        input_file_object.close()
+
+    print('max line width: %d' % max_line_width)
+    print('max line count: %d' % max_line_count)
+
+    for file_path in files:
+        print(file_path)
+        if not file_path.endswith('.java'):
+            continue
+        first = os.popen(
+            'java -jar C:/Users/pauld/PycharmProjects'
+            '/DeepCRMFYP/analyzer/checkstyle-10.4-all.jar -c /google_checks.xml ' + file_path).readlines()
+        print(first)
+        print("here")
+        abstract_tree = os.popen(
+            'java -jar C:/Users/pauld/PycharmProjects'
+            '/DeepCRMFYP/analyzer/checkstyle-10.4-all.jar -t ' + file_path).readlines()
+        print(abstract_tree)
+        for leaf in abstract_tree:
+            re.sub(r'&lt;', '<', leaf)
+            re.sub(r'&gt;', '>', leaf)
+
+        output_file_path = replace_root_dir(file_path, 'Node') + '.matrix'
+        output_file_object = open(output_file_path, 'w')
+
+        output_matrix = []
+        for line in abstract_tree:
+            output_matrix_row = []
+            line_list = list(line)
+            for s in line_list:
+                if s == '\r':
+                    continue
+                elif s:
+                    output_matrix_row.append(str(ord(s)))
+
+            output_matrix.append(output_matrix_row)
+
+        output_text = ''
+
+        row_count = len(output_matrix)
+        for row_index in range(0, max_line_count):
+            if row_index >= row_count:
+                for i in range(0, max_line_width):
+                    if i == 0:
+                        output_text = output_text + '-1'
+                    else:
+                        output_text = output_text + ',' + '-1'
+                output_text = output_text + ',\n'
+                continue
+
+            row = output_matrix[row_index]
+            row_width = len(row)
+            for i in range(0, max_line_width):
+                if i < row_width:
+                    if i == 0:
+                        output_text = output_text + row[i]
+                    else:
+                        output_text = output_text + ',' + row[i]
+                else:
+                    output_text = output_text + ',' + '-1'
+            output_text = output_text + ',\n'
+
+        output_file_object.write(output_text)
+        output_file_object.close()
+
+def transfer_token_level_v2(files, token_dict_file_path):
+    print('ToMatrix %d files' % len(files))
+    token_dict = {}
+    char_dict_load_from_file(token_dict_file_path, token_dict)
+
+    max_line_width = 0
+    max_line_count = 0
+
+    for file_path in files:
+        if not file_path.endswith('.java'):
+            continue
+
+        input_file_object = open(file_path, 'r')
+
+        lines = input_file_object.readlines()
+        if len(lines) > max_line_count:
+            max_line_count = len(lines)
+
+        for line in lines:
+            if len(line) > max_line_width:
+                max_line_width = len(line)
+                print('%s max line %d' % (file_path, max_line_width))
+        input_file_object.close()
+
+    print('max line width: %d' % max_line_width)
+    print('max line count: %d' % max_line_count)
+
+    for file_path in files:
+        print(file_path)
+        if not file_path.endswith('.java'):
+            continue
+        input_file_object = open(file_path, 'r')
+
+        output_file_path = replace_root_dir(file_path, 'Token') + '.matrix'
+        output_file_object = open(output_file_path, 'w')
+
+        output_matrix = []
+        for line in input_file_object:
+            output_matrix_row = []
+            line_list = re.split("( |,|:|;|\\{|}|\\(|\\)|\\[|]|\\.|\t|\n)", line)
+            for s in line_list:
+                if s == '\r':
+                    continue
+                elif s in token_dict.keys():
+                    output_matrix_row.append(token_dict[s])
+                else:
+                    output_matrix_row.append(token_dict['unknown'])
+
+            output_matrix.append(output_matrix_row)
+
+        output_text = ''
+
+        row_count = len(output_matrix)
+        for row_index in range(0, max_line_count):
+            if row_index >= row_count:
+                for i in range(0, max_line_width):
+                    if i == 0:
+                        output_text = output_text + '-1'
+                    else:
+                        output_text = output_text + ',' + '-1'
+                output_text = output_text + ',\n'
+                continue
+
+            row = output_matrix[row_index]
+            row_width = len(row)
+            for i in range(0, max_line_width):
+                if i < row_width:
+                    if i == 0:
+                        output_text = output_text + row[i]
+                    else:
+                        output_text = output_text + ',' + row[i]
+                else:
+                    output_text = output_text + ',' + '-1'
+            output_text = output_text + ',\n'
+
+        output_file_object.write(output_text)
+        output_file_object.close()
+        input_file_object.close()
+
+
 def transfer_token_level(files, char_dict_file_path, to_ascii):
     char_dict = {}
     char_dict_load_from_file(char_dict_file_path, char_dict)
@@ -122,9 +288,9 @@ def transfer_token_level(files, char_dict_file_path, to_ascii):
     for k, v in char_dict.items():
         char_dict[k] = char_dict[k] + ','
 
-    format_char_dict = {' ': char_dict.pop(' '), '\n': char_dict.pop('\n'), '\t': char_dict.pop('\t')}
+    format_char_dict = {' ': "50", '\n': "51", '\t': "52"}
 
-    special_char_dict = {',': char_dict.pop(',')}
+    special_char_dict = {',': "53"}
 
     max_line_width = 0
     max_line_count = 0
@@ -392,8 +558,8 @@ def transfer_character_level(files, char_dict_file_path):
             for s in line_list:
                 if s == '\r':
                     continue
-                if s in char_dict:
-                    output_matrix_row.append(char_dict[s])
+                elif s:
+                    output_matrix_row.append(str(ord(s)))
                 else:
                     output_matrix_row.append(char_dict['unknown'])
 
@@ -468,6 +634,6 @@ if __name__ == '__main__':
     if _character:
         transfer_character_level(file_list, 'char.txt')
     elif _token:
-        transfer_token_level(file_list, 'word.txt', True)
+        transfer_token_level_v2(file_list, 'word.txt')
     elif _node:
-        transfer_node_level(file_list, 'element.txt')
+        transfer_node_level_v2(file_list)

@@ -1,5 +1,6 @@
 import os
 import subprocess
+import sys
 from util.util import create_new_dir, walk_files
 from util.distincy import distincy
 
@@ -46,15 +47,19 @@ class Evaluation(object):
         print('------pmd start-------')
         # pmd
         output_lines = []
-        cmd = r'C:\Users\pauld\PycharmProjects\DeepCRMFYP\analyzer\pmd-bin-6.51.0\bin\run.sh pmd -d ' \
-              + dir_for_marking + r' -R rulesets\java\basic.xml,rulesets\java\design.xml,rulesets\java' \
-                                  r'\braces.xml,rulesets\java\comments.xml,rulesets\java\codesize.xml,rulesets\java' \
-                                  r'\controversial.xml,rulesets\java\naming.xml -f text'
-        output = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+        cmd = 'C:/Users/pauld/PycharmProjects/DeepCRMFYP/analyzer/pmd-bin-6.51.0/bin/run.sh pmd -d ' \
+              + dir_for_marking + ' -R rulesets/java/basic.xml,rulesets/java/design.xml,rulesets/java' \
+                                  '/braces.xml,rulesets/java/comments.xml,rulesets/java/codesize.xml,rulesets/java' \
+                                  '/controversial.xml,rulesets/java/naming.xml -f text > C:/Users/pauld/PycharmProjects' \
+                                  '/DeepCRMFYP/Source Code/bashoutput.txt'
+        subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
         #print(output)
         #print(output.stdout)
         #print(subprocess.check_output(cmd, shell=True))
-        output_lines.extend(output.stdout.readlines())
+        #output_lines.extend(output.stdout.readlines())
+        with open("C:/Users/pauld/PycharmProjects/DeepCRMFYP/Source Code/bashoutput.txt") as bash_output:
+            output = bash_output.readlines()
+        output_lines.extend(output)
         print("******************")
         print(output_lines)
         print("******************")
