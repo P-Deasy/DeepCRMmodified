@@ -12,7 +12,7 @@ def grab_java_files(file_directory):
         if not file.endswith('.java'):
             continue
 
-        output_file_path = r"C:\Users\pauld\PycharmProjects\DeepCRMFYP\ClassesToAnalyse" + os.path.basename(file)
+        output_file_path = r"C:\Users\pauld\PycharmProjects\DeepCRMFYP\ClassesToAnalyse\\" + os.path.basename(file)
 
         with open(file, 'r') as input_file_object, open(output_file_path, 'a') as output_file_object:
 
