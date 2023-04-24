@@ -1,0 +1,2 @@
+These files were used to rank classes in the when using Linux which was what was used with the final ranking there are difference between here and the other versions
+so it was added for clarity
